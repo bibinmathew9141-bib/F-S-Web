@@ -1,14 +1,24 @@
-const modules = [
-"Fire Alarm Panels",
-"Fire Pumps",
-"FIRE WATER TANKS",
-"FM 200 / Data Room",
-"Foam system / Generators",
-"Sub Station(LT,HT)",
-"Gas Chamber/Tank",
-"Deluge System",
-"FIT -OUT",
-"Inspection's",
-"Daily Visit any Floor",
-"Additional Assign Job"
-];
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sheets</title>
+  <script src="js/app.js"></script>
+</head>
+<body>
+
+<h2 id="mallName">Select Sheet</h2>
+
+<div id="list"></div>
+
+<br>
+
+<button onclick="window.location.href='table.html'">📋 Daily Sheet</button>
+<button onclick="loadMonthlyPage()">📅 Monthly Sheet</button>
+<button onclick="loadYearlyPage()">📆 Yearly Sheet</button>
+
+<br><br>
+
+<button onclick="goBack()">⬅ Back</button>
+
+</body>
+</html>
