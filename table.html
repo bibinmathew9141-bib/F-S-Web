@@ -1,8 +1,15 @@
-<h2 id="title"></h2>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Table</title>
+</head>
+<body>
+
+<h2>🔥 Fire Safety Data</h2>
 
 <input type="text" id="filter" placeholder="Filter..." onkeyup="filterTable()">
 
-<table id="dataTable">
+<table border="1" id="dataTable">
 <thead>
 <tr>
 <th>Sl No</th>
@@ -18,10 +25,37 @@
 <tbody></tbody>
 </table>
 
+<br>
+
 <button onclick="addRow()">➕ Add Row</button>
-<button onclick="exportPDF()">📄 Save PDF</button>
+<button onclick="window.print()">📄 Save PDF</button>
+
 <button onclick="exportExcel()">📊 Save Excel</button>
+
+<br><br>
+
 <button onclick="goBack()">⬅ Back</button>
 
+<script src="js/app.js"></script>
 <script src="js/table.js"></script>
-<script src="js/export.js"></script>
+
+<script>
+function exportExcel(){
+  let data = JSON.parse(localStorage.getItem("tableData")) || [];
+
+  let csv = "SlNo,Date,Tag,Location,Status,Remarks,Shift\n";
+
+  data.forEach((r,i)=>{
+    csv += `${i+1},${r.date},${r.tag},${r.location},${r.status},${r.remarks},${r.shift}\n`;
+  });
+
+  let blob = new Blob([csv], { type: 'text/csv' });
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = "FireSafetyData.csv";
+  a.click();
+}
+</script>
+
+</body>
+</html>
