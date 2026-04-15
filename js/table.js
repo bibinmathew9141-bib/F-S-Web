@@ -1,7 +1,13 @@
+// ===== LOAD DATA =====
 let tableData = JSON.parse(localStorage.getItem("filteredData")) ||
                 JSON.parse(localStorage.getItem("tableData")) || [];
 
-// ================= ADD ROW =================
+// ===== SAVE TO LOCALSTORAGE =====
+function saveData() {
+  localStorage.setItem("tableData", JSON.stringify(tableData));
+}
+
+// ===== ADD ROW =====
 function addRow() {
   let row = {
     date: getTodayDate(),
@@ -13,18 +19,24 @@ function addRow() {
   };
 
   tableData.push(row);
-  localStorage.setItem("tableData", JSON.stringify(tableData));
+  saveData();
   render();
 }
 
-// ================= DELETE =================
+// ===== DELETE ROW =====
 function deleteRow(index) {
   tableData.splice(index, 1);
-  localStorage.setItem("tableData", JSON.stringify(tableData));
+  saveData();
   render();
 }
 
-// ================= RENDER =================
+// ===== UPDATE DATA WHEN EDITING =====
+function updateCell(index, field, value) {
+  tableData[index][field] = value;
+  saveData();
+}
+
+// ===== RENDER TABLE =====
 function render() {
   let tbody = document.querySelector("#dataTable tbody");
   tbody.innerHTML = "";
@@ -34,12 +46,12 @@ function render() {
 
     row.innerHTML = `
       <td>${i+1}</td>
-      <td contenteditable="true">${r.date}</td>
-      <td contenteditable="true">${r.tag}</td>
-      <td contenteditable="true">${r.location}</td>
-      <td contenteditable="true">${r.status}</td>
-      <td contenteditable="true">${r.remarks}</td>
-      <td contenteditable="true">${r.shift}</td>
+      <td contenteditable oninput="updateCell(${i}, 'date', this.innerText)">${r.date}</td>
+      <td contenteditable oninput="updateCell(${i}, 'tag', this.innerText)">${r.tag}</td>
+      <td contenteditable oninput="updateCell(${i}, 'location', this.innerText)">${r.location}</td>
+      <td contenteditable oninput="updateCell(${i}, 'status', this.innerText)">${r.status}</td>
+      <td contenteditable oninput="updateCell(${i}, 'remarks', this.innerText)">${r.remarks}</td>
+      <td contenteditable oninput="updateCell(${i}, 'shift', this.innerText)">${r.shift}</td>
       <td><button onclick="deleteRow(${i})">❌</button></td>
     `;
 
@@ -47,7 +59,7 @@ function render() {
   });
 }
 
-// ================= FILTER =================
+// ===== FILTER =====
 function filterTable() {
   let input = document.getElementById("filter").value.toLowerCase();
   let rows = document.querySelectorAll("#dataTable tbody tr");
@@ -58,5 +70,5 @@ function filterTable() {
   });
 }
 
-// ================= INIT =================
+// ===== INIT =====
 render();
