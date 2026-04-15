@@ -1,0 +1,27 @@
+<h2 id="title"></h2>
+
+<input type="text" id="filter" placeholder="Filter..." onkeyup="filterTable()">
+
+<table id="dataTable">
+<thead>
+<tr>
+<th>Sl No</th>
+<th>Date</th>
+<th>Tag</th>
+<th>Location</th>
+<th>Status</th>
+<th>Remarks</th>
+<th>Shift</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<button onclick="addRow()">➕ Add Row</button>
+<button onclick="exportPDF()">📄 Save PDF</button>
+<button onclick="exportExcel()">📊 Save Excel</button>
+<button onclick="goBack()">⬅ Back</button>
+
+<script src="js/table.js"></script>
+<script src="js/export.js"></script>
