@@ -1,10 +1,37 @@
-// ===== LOAD DATA =====
-let tableData = JSON.parse(localStorage.getItem("filteredData")) ||
-                JSON.parse(localStorage.getItem("tableData")) || [];
+// ===== LOAD DATA SOURCE =====
+let isFiltered = false;
 
-// ===== SAVE TO LOCALSTORAGE =====
+let tableData = [];
+if (localStorage.getItem("filteredData")) {
+  tableData = JSON.parse(localStorage.getItem("filteredData"));
+  isFiltered = true;
+} else {
+  tableData = JSON.parse(localStorage.getItem("tableData")) || [];
+}
+
+// ===== SAVE DATA =====
 function saveData() {
-  localStorage.setItem("tableData", JSON.stringify(tableData));
+  if (isFiltered) {
+    // update main tableData also
+    let mainData = JSON.parse(localStorage.getItem("tableData")) || [];
+
+    // Replace matching records by date+tag (simple logic)
+    tableData.forEach(updatedRow => {
+      let index = mainData.findIndex(r =>
+        r.date === updatedRow.date && r.tag === updatedRow.tag
+      );
+
+      if (index !== -1) {
+        mainData[index] = updatedRow;
+      } else {
+        mainData.push(updatedRow);
+      }
+    });
+
+    localStorage.setItem("tableData", JSON.stringify(mainData));
+  } else {
+    localStorage.setItem("tableData", JSON.stringify(tableData));
+  }
 }
 
 // ===== ADD ROW =====
@@ -30,9 +57,9 @@ function deleteRow(index) {
   render();
 }
 
-// ===== UPDATE DATA WHEN EDITING =====
-function updateCell(index, field, value) {
-  tableData[index][field] = value;
+// ===== UPDATE CELL (FIXED ISSUE HERE 🔥) =====
+function updateCell(index, field, element) {
+  tableData[index][field] = element.innerText.trim();
   saveData();
 }
 
@@ -46,12 +73,12 @@ function render() {
 
     row.innerHTML = `
       <td>${i+1}</td>
-      <td contenteditable oninput="updateCell(${i}, 'date', this.innerText)">${r.date}</td>
-      <td contenteditable oninput="updateCell(${i}, 'tag', this.innerText)">${r.tag}</td>
-      <td contenteditable oninput="updateCell(${i}, 'location', this.innerText)">${r.location}</td>
-      <td contenteditable oninput="updateCell(${i}, 'status', this.innerText)">${r.status}</td>
-      <td contenteditable oninput="updateCell(${i}, 'remarks', this.innerText)">${r.remarks}</td>
-      <td contenteditable oninput="updateCell(${i}, 'shift', this.innerText)">${r.shift}</td>
+      <td contenteditable onblur="updateCell(${i}, 'date', this)">${r.date}</td>
+      <td contenteditable onblur="updateCell(${i}, 'tag', this)">${r.tag}</td>
+      <td contenteditable onblur="updateCell(${i}, 'location', this)">${r.location}</td>
+      <td contenteditable onblur="updateCell(${i}, 'status', this)">${r.status}</td>
+      <td contenteditable onblur="updateCell(${i}, 'remarks', this)">${r.remarks}</td>
+      <td contenteditable onblur="updateCell(${i}, 'shift', this)">${r.shift}</td>
       <td><button onclick="deleteRow(${i})">❌</button></td>
     `;
 
